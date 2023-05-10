@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<base target="_top">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Quick Start - Leaflet</title>
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		#map{
+			height: 100%;
+			width: 100%;
+		}
+	</style>
+
+	
+</head>
+<body>
+
+
+
+<div id="map"></div>
+<script>
+
+	const map = L.map('map').setView([43.65, -79.39], 13);
+
+    const tiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
+	maxZoom: 16
+    }).addTo(map)
+
+    fetch("Bike network data.geojson").then(function(response) {
+        return response.json();
+    }).then(function(data) {
+        L.geoJSON(data).addTo(map)
+    });
+
+	/*const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		maxZoom: 19,
+		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(map);*/
+
+	const marker = L.marker([43.6608423, -79.3967949]).addTo(map)
+		.bindPopup('<b>School of Cities</b>').openPopup();
+
+	/*const circle = L.circle([51.508, -0.11], {
+		color: 'red',
+		fillColor: '#f03',
+		fillOpacity: 0.5,
+		radius: 500
+	}).addTo(map).bindPopup('I am a circle.');*/
+
+	const polygon = L.polygon([
+		[43.6666683, -79.4038033],
+		[43.6579424, -79.4000157],
+		[43.6598788, -79.3903446],
+        [43.6687016, -79.3941295]
+	]).addTo(map).bindPopup('I am a polygon.');
+
+
+	/*const popup = L.popup()
+		.setLatLng([51.513, -0.09])
+		.setContent('I am a standalone popup.')
+		.openOn(map);*/
+
+	function onMapClick(e) {
+		popup
+			.setLatLng(e.latlng)
+			.setContent(`You clicked the map at ${e.latlng.toString()}`)
+			.openOn(map);
+	}
+
+	map.on('click', onMapClick);
+
+</script>
+
+
+
+</body>
+</html>
